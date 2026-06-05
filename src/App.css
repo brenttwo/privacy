@@ -1,36 +1,28 @@
-.Card {
-  width: 600px;
-  height: 260px;
-  background: var(--card-background);
-  border: 12px solid var(--border-color);
-  padding: 32px 96px;
-  text-align: center;
-  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.06);
+.card {
+  max-width: 650px;
+  width: 100%;
+  min-height: 100vh;
+  background: #D8E6FF;
+  border-left: 12px solid #000;
+  border-right: 12px solid #000;
+  padding: 48px 80px;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  animation: cardEntrance 0.35s ease-out forwards;
+  animation: entrance 0.35s ease-out forwards;
 }
 
-@keyframes cardEntrance {
+@keyframes entrance {
   from {
-    transform: translateY(16px);
+    opacity: 0;
+    transform: translateY(8px);
   }
   to {
+    opacity: 1;
     transform: translateY(0);
   }
 }
 
-.card-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-}
-
-.Card h1 {
-  margin: 0 0 4px;
+.card h1 {
+  margin: 0 0 24px;
   font-weight: 900;
   font-size: 2.5rem;
   line-height: 1.1;
@@ -38,73 +30,45 @@
   color: #111;
 }
 
-.Card .subtitle {
-  margin: 0;
+.card p {
+  margin: 0 0 20px;
   font-weight: 400;
-  color: var(--muted-text);
-  font-size: 1.125rem;
-}
-
-.dots {
-  display: flex;
-  gap: 10px;
-  height: 44px;
-  align-items: center;
-  justify-content: center;
-  margin-top: auto;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  background: var(--accent-color);
-  border-radius: 50%;
-  animation: wave 1.2s ease-in-out infinite;
-}
-
-.dot:nth-child(2) {
-  animation-delay: 0.15s;
-}
-
-.dot:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-@keyframes wave {
-  0%, 60%, 100% {
-    opacity: 0.2;
-    transform: translateY(0);
-  }
-  30% {
-    opacity: 1;
-    transform: translateY(-10px);
-  }
-}
-
-.retry-btn {
-  font-family: 'Zain', sans-serif;
-  font-weight: 800;
   font-size: 1.25rem;
-  padding: 12px 56px;
-  background: var(--accent-color);
-  color: white;
-  border: 3px solid #111;
-  cursor: pointer;
-  margin-top: auto;
-  transition: opacity 0.15s ease;
+  line-height: 1.5;
+  color: #0A1218;
 }
 
-.retry-btn:hover {
+.card pre {
+  margin: 0 0 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #0A1218;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 16px 20px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.divider {
+  width: 100%;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  margin: 28px 0;
+}
+
+.small {
+  font-size: 0.95rem !important;
+  color: #4a5a6a !important;
+}
+
+.card a {
+  color: #4C6AFF;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+.card a:hover {
   opacity: 0.8;
-}
-
-.footer {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
-  font-weight: 400;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.7);
 }

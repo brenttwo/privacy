@@ -1,143 +1,58 @@
-import { useState, useEffect } from 'react'
 import './App.css'
-import { supabase } from './utils/supabase'
-
-function hashIP(ip: string): Promise<string> {
-  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(ip))
-    .then(h => Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join(''))
-}
 
 function App() {
-  const [step, setStep] = useState<'ip' | 'working' | 'done' | 'failed'>('ip')
-  const [ip, setIp] = useState('')
-  const [failReason, setFailReason] = useState('')
-  const [statusText, setStatusText] = useState('')
-
-  useEffect(() => {
-    if (step !== 'ip') return
-    fetch('https://api.ipify.org?format=json')
-      .then(r => r.json())
-      .then(d => {
-        setIp(d.ip)
-        setStep('working')
-      })
-      .catch(() => setStep('failed'))
-  }, [step])
-
-  useEffect(() => {
-    if (step !== 'working') return
-
-    const token = new URLSearchParams(location.search).get('token')
-    if (!token) {
-      setFailReason('No verification token found')
-      setStep('failed')
-      return
-    }
-
-    setStatusText('Hashing your IP...')
-    hashIP(ip).then(ipHash => {
-      setStatusText('Validating your token...')
-      supabase
-        .from('verification_tokens')
-        .select('*')
-        .eq('token', token)
-        .single()
-        .then(({ data: row, error }) => {
-          if (error || !row) {
-            console.error('Token not found:', error)
-            setFailReason('Invalid or expired token')
-            setStep('failed')
-            return
-          }
-          if (row.verified) {
-            setStatusText('')
-            console.error('Already verified!')
-            setFailReason('Already verified!')
-            setStep('failed')
-            return
-          }
-
-          setStatusText('Checking for duplicate IPs...')
-          supabase
-            .from('verification_tokens')
-            .select('user_id')
-            .eq('ip', ipHash)
-            .eq('verified', true)
-            .then(({ data: dupes, error: dupError }) => {
-              if (dupError) {
-                console.error('IP check error:', dupError)
-                setFailReason('Something went wrong')
-                setStep('failed')
-                return
-              }
-              if (dupes && dupes.length > 0) {
-                setStatusText('')
-                console.error('Duplicate IP detected')
-                setFailReason('This IP has already been used to verify')
-                setStep('failed')
-                return
-              }
-
-              setStatusText('Writing your verification...')
-              supabase
-                .from('verification_tokens')
-                .update({ ip: ipHash, verified: true })
-                .eq('token', token)
-                .then(({ error: updateError }) => {
-                  if (updateError) {
-                    console.error('Supabase update error:', updateError)
-                    setFailReason('Something went wrong')
-                    setStep('failed')
-                  } else {
-                    setStep('done')
-                  }
-                })
-            })
-        })
-    })
-  }, [step, ip])
-
   return (
-    <>
-      <div className="Card">
-        <div className="card-content">
-          {step === 'ip' && (
-            <>
-              <h1>Grabbing your ip</h1>
-              <p className="subtitle">You can request to delete this. We never sell your data cause</p>
-            </>
-          )}
-          {step === 'working' && (
-            <>
-              <h1>Verifying you rn</h1>
-              <p className="subtitle">{statusText || ' working...'}</p>
-            </>
-          )}
-          {step === 'failed' && (
-            <>
-              <h1>Verification failed</h1>
-              <p className="subtitle">{failReason || 'Failed to verify, dm the server owner or open a ticket!'}</p>
-            </>
-          )}
-          {step === 'done' && (
-            <>
-              <h1>You can now continue to the server!</h1>
-              <p className="subtitle">You can close this tab!</p>
-            </>
-          )}
-          {(step === 'ip' || step === 'working') && (
-            <div className="dots">
-              <span className="dot" />
-              <span className="dot" />
-              <span className="dot" />
-            </div>
-          )}
-          {step === 'failed' && (
-            <button className="retry-btn" onClick={() => setStep('ip')}>Try again</button>
-          )}
-        </div>
-      </div>
-    </>
+    <div className="card">
+      <h1>Privacy Policy</h1>
+
+      <p>
+        When you verify, we grab your
+        IP address and immediately run it through SHA-256. That turns it into
+        a jumble of letters and numbers that cant be reversed. We never store
+        your actual IP anywhere, just that hash.
+      </p>
+
+      <p>
+        The hash is used for one thing: checking if someone with the same IP
+        has already verified. Thats it. We dont sell it, share it, trade it,
+        or do anything else with it. Its basically just an anti ban evasion
+        measure.
+      </p>
+
+      <p>
+        Example:
+      </p>
+
+      <pre>IP:      123.123.123.123<br/>Hash:    8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92</pre>
+
+      <p>
+        That hash is all that ever gets stored. The original IP never reaches
+        the database, a log file, or anywhere else.
+      </p>
+
+      <p>
+        If you want to know what IP hash we have stored for you, or want it
+        removed, just message the server owner or open a ticket with your
+        Discord user ID. We can delete the hash from our database for you.
+        Keep in mind though: if you have been flagged for ban evasion or
+        using an alt account, we will not remove your data.
+      </p>
+
+      <div className="divider" />
+
+      <p className="small">
+        Source code: <a href="https://github.com/brenttwo/verify">github.com/brenttwo/verify</a>
+      </p>
+
+      <p className="small">
+        Email: <a href="mailto:signaajames@proton.me">signaajames@proton.me</a> (replies may take a bit longer)
+      </p>
+
+      <p className="small">
+        To request data removal or review: DM a server owner with your user ID,
+        or open a ticket in the server, or email the address above.
+      </p>
+    </div>
   )
 }
 

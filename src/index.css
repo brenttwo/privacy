@@ -35,12 +35,9 @@
 
 :root {
   --background-color: #4C6AFF;
-  --card-background: #D8E6FF;
-  --border-color: #000;
   --text-color: #0A1218;
   --accent-color: #4C6AFF;
   --muted-text: #4a5a6a;
-  --success-color: #22c55e;
 }
 
 body {
@@ -49,8 +46,8 @@ body {
   font-family: 'Zain', sans-serif;
   margin: 0;
   padding: 0;
-  align-items: center;
-  justify-content: center;
   display: flex;
-  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
