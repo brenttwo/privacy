@@ -7,15 +7,14 @@ function App() {
 
       <p>
         When you verify, we grab your
-        IP address and immediately run it through SHA-256. That turns it into
-        a jumble of letters and numbers that cant be reversed. We never store
-        your actual IP anywhere, just that hash.
+        IP address and immediately run it through SHA-256 before storing it. We don't store
+        your original IP anywhere.
       </p>
 
       <p>
         The hash is used for one thing: checking if someone with the same IP
-        has already verified. Thats it. We dont sell it, share it, trade it,
-        or do anything else with it. Its basically just an anti ban evasion
+        has already verified. That's it. We don't sell it, share it, trade it,
+        or do anything else with it. It's basically just an anti ban evasion
         measure.
       </p>
 
@@ -23,7 +22,7 @@ function App() {
         Example:
       </p>
 
-      <pre>IP:    123.123.123.123<br/>Hash:  8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92</pre>
+      <pre>IP:    203.0.113.42<br/>Hash:  17af1cf3d1b5332c53349fc789abdc853bbeea7ed33eff727ff794ab741ccac9</pre>
 
       <p>
         That hash is all that ever gets stored. The original IP never reaches
